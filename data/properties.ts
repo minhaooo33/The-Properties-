@@ -1,5 +1,5 @@
 import { firestore, getTotalPages } from "@/firebase/sever";
-import { PropertiesStatus } from "@/types/propertiesStatus";
+import { PropertyStatus } from "@/types/propertiesStatus";
 import { Property } from "@/types/property";
 
 
@@ -8,7 +8,7 @@ type GetPropertiesOptions = {
         minPrice?: number | null;
         maxPrice?: number | null;
         minBedrooms?: number | null;
-        status?: PropertiesStatus[] | null;
+        status?: PropertyStatus[] | null;
     },
     pagination?: {
         pageSize?: number;
