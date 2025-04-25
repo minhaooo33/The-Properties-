@@ -1,6 +1,6 @@
 "use server"
 
-import { auth, firestore } from "@/firebase/sever";
+import { auth, firestore } from "@/firebase/server";
 import { Property } from "@/types/property"
 import { formDataSchema } from "@/validation/formSchema";
 

@@ -1,10 +1,10 @@
-import { firestore, getTotalPages } from "@/firebase/sever";
+import { firestore, getTotalPages } from "@/firebase/server";
 import { PropertyStatus } from "@/types/propertiesStatus";
 import { Property } from "@/types/property";
 
 
 type GetPropertiesOptions = {
-    filter?: {
+    filters?: {
         minPrice?: number | null;
         maxPrice?: number | null;
         minBedrooms?: number | null;
@@ -15,10 +15,11 @@ type GetPropertiesOptions = {
         page?: number;
 }
 }
+
 export const getProperties = async (options? : GetPropertiesOptions) => {
     const page = options?.pagination?.page || 1;
     const pageSize = options?.pagination?.pageSize || 10;
-    const { minPrice, maxPrice, minBedrooms, status } = options?.filter || {};
+    const { minPrice, maxPrice, minBedrooms, status } = options?.filters || {};
 
     let getPropertiesQuery = firestore.collection("properties").orderBy("updatedAt", "desc");
 
@@ -40,17 +41,22 @@ export const getProperties = async (options? : GetPropertiesOptions) => {
 
     const totalPages = await getTotalPages(getPropertiesQuery, pageSize);
 
-    const propertiesSnapshot = await getPropertiesQuery
-        .limit(pageSize)
-        .offset((page - 1) * pageSize)
-        .get();
+    try {
+        const propertiesSnapshot = await getPropertiesQuery
+            .limit(pageSize)
+            .offset((page - 1) * pageSize)
+            .get();
 
-    const properties = propertiesSnapshot.docs.map((doc) => ({
-        id: doc.id,
-        ...doc.data(),
-    }as Property));
+        const properties = propertiesSnapshot.docs.map((doc) => ({
+            id: doc.id,
+            ...doc.data(),
+        } as Property));
 
-    return { data: properties, totalPages};
+        return { data: properties, totalPages };
+    } catch (err) {
+        console.error("❗ Firestore 查詢失敗", err);
+        throw err;
+    }
 
 };
 

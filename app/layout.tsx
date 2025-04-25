@@ -37,7 +37,7 @@ export default function RootLayout({
           </Link>
           <ul className="flex gap-6 items-center">
             <li>
-              <Link href="profile" className="hover:upderline">
+              <Link href="/property-search" className="hover:upderline">
                 Search
               </Link>
             </li>
